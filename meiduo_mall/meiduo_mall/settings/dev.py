@@ -13,17 +13,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os, sys
 
 
-# print(sys.path)
-"""
-[
-'~/Desktop/python_dev/meiduo_project/meiduo_mall', 
-'/usr/lib/python36.zip', 
-'/usr/lib/python3.6', 
-'/usr/lib/python3.6/lib-dynload', 
-'~/.virtualenvs/py3_meiduo/lib/python3.6/site-packages'
-]
-"""
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))

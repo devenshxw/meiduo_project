@@ -206,3 +206,5 @@ AUTH_USER_MODEL = 'users.User'
 # 指定自定义的用户认证后端
 # AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 AUTHENTICATION_BACKENDS = ['users.utils.UsernameMobileAuthBackend']
+# 当用户未通过登录验证时，将用户重定向到登录页面
+LOGIN_URL = '/login/'

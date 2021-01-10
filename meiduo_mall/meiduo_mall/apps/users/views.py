@@ -86,7 +86,12 @@ class RegisterView(View):
         # 登入用户，实现状态保持
         login(request, user)
         # 响应注册结果
-        return redirect(reverse('contents:index'))
+        response = redirect(reverse('contents:index'))
+
+        # 注册时用户名写入到cookie，有效期15天
+        response.set_cookie('username', user.username, max_age=3600 * 24 * 15)
+
+        return response
 
 
 class LoginView(View):
@@ -140,4 +145,9 @@ class LoginView(View):
             request.session.set_expiry(None)
 
         # 响应登录结果
-        return redirect(reverse('contents:index'))
+        response = redirect(reverse('contents:index'))
+
+        # 登录时用户名写入到cookie，有效期15天
+        response.set_cookie('username', user.username, max_age=3600 * 24 * 15)
+
+        return response

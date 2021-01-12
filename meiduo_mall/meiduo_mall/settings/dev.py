@@ -209,3 +209,7 @@ AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = ['users.utils.UsernameMobileAuthBackend']
 # 当用户未通过登录验证时，将用户重定向到登录页面
 LOGIN_URL = '/login/'
+# QQ登录参数
+QQ_CLIENT_ID = '101518219'
+QQ_CLIENT_SECRET = '418d84ebdc7241efb79536886ae95224'
+QQ_REDIRECT_URI = 'http://www.meiduo.site:8000/oauth_callback'

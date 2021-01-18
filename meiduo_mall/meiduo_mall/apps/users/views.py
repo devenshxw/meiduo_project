@@ -6,9 +6,14 @@ from django.urls import reverse
 from django.contrib.auth import login, authenticate, logout
 from django_redis import get_redis_connection
 from django.contrib.auth.mixins import LoginRequiredMixin
-import re
+import re, json, logging
 from users.models import User
 from meiduo_mall.utils.response_code import RETCODE
+from meiduo_mall.utils.views import LoginRequiredJSONMixin
+
+
+# 创建日志输出器
+logger = logging.getLogger("django")
 
 
 class UsernameCountView(View):
@@ -187,3 +192,28 @@ class UserInfoView(LoginRequiredMixin, View):
         return render(request, 'user_center_info.html', context=context)
 
 
+class EmailView(LoginRequiredJSONMixin, View):
+    """添加邮箱"""
+
+    def put(self, request):
+        """实现添加邮箱逻辑"""
+        # 接收参数
+        json_dict = json.loads(request.body.decode())
+        email = json_dict.get('email')
+
+        # 校验参数
+        if not email:
+            return http.HttpResponseForbidden('缺少email参数')
+        if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
+            return http.HttpResponseForbidden('参数email有误')
+
+        # 赋值email字段
+        try:
+            request.user.email = email
+            request.user.save()
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
+
+        # 响应添加邮箱结果
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '添加邮箱成功'})

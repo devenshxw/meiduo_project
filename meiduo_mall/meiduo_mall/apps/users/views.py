@@ -178,11 +178,12 @@ class UserInfoView(LoginRequiredMixin, View):
 
     def get(self, request):
         """提供个人信息界面"""
-        # if request.user.is_authenticated():
-        #     return render(request, 'user_center_info.html')
-        # else:
-        #     return redirect(reverse('users:login'))
-        # login_url = '/login/'
-        # redirect_field_name = 'redirect to'
-        return render(request, 'user_center_info.html')
+        context = {
+            'username': request.user.username,
+            'mobile': request.user.mobile,
+            'email': request.user.email,
+            'email_active': request.user.email_active
+        }
+        return render(request, 'user_center_info.html', context=context)
+
 

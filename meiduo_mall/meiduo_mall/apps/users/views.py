@@ -11,6 +11,7 @@ from users.models import User
 from meiduo_mall.utils.response_code import RETCODE
 from meiduo_mall.utils.views import LoginRequiredJSONMixin
 from celery_tasks.email.tasks import send_verify_email
+from users.utils import generate_verify_email_url, check_verify_email_token
 
 
 # 创建日志输出器
@@ -217,8 +218,36 @@ class EmailView(LoginRequiredJSONMixin, View):
             return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
 
         # 异步发送验证邮件
-        verify_url = '邮件验证链接'
+        verify_url = generate_verify_email_url(request.user)
         send_verify_email.delay(email, verify_url)
 
         # 响应添加邮箱结果
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '添加邮箱成功'})
+
+
+class VerifyEmailView(View):
+    """验证邮箱"""
+
+    def get(self, request):
+        """实现邮箱验证逻辑"""
+        # 接收参数
+        token = request.GET.get('token')
+
+        # 校验参数：判断token是否为空和过期，提取user
+        if not token:
+            return http.HttpResponseBadRequest('缺少token')
+
+        user = check_verify_email_token(token)
+        if not user:
+            return http.HttpResponseForbidden('无效的token')
+
+        # 修改email_active的值为True
+        try:
+            user.email_active = True
+            user.save()
+        except Exception as e:
+            logger.error(e)
+            return http.HttpResponseServerError('激活邮件失败')
+
+        # 返回邮箱验证结果
+        return redirect(reverse('users:info'))

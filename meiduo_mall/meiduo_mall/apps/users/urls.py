@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^emails/verification/$', views.VerifyEmailView.as_view()),  # 验证邮箱
     url(r'^addresses/$', views.AddressView.as_view(), name='address'),  # 展示收货地址
     url(r'^addresses/create/$', views.CreateAddressView.as_view()),  # 新增收货地址
+    url(r'^addresses/(?P<address_id>\d+)/$', views.UpdateDestroyAddressView.as_view()),  # 新增收货地址
 ]

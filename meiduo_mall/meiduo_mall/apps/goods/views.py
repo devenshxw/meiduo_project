@@ -4,6 +4,7 @@ from django import http
 
 from goods.models import GoodsCategory
 from contents.utils import get_categories
+from goods.utils import get_breadcrumb
 
 
 class ListView(View):
@@ -19,9 +20,12 @@ class ListView(View):
 
         # 查询商品频道分类
         categories = get_categories()
+        # 查询面包屑导航
+        breadcrumb = get_breadcrumb(category)
 
         # 渲染页面
         context = {
             'categories':categories,
+            'breadcrumb': breadcrumb
         }
         return render(request, 'list.html', context)

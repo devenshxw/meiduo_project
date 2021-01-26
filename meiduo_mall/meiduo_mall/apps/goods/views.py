@@ -7,6 +7,7 @@ from goods.models import GoodsCategory, SKU
 from contents.utils import get_categories
 from goods.utils import get_breadcrumb
 from . import constants
+from meiduo_mall.utils.response_code import RETCODE
 
 
 class ListView(View):
@@ -65,3 +66,24 @@ class ListView(View):
             'page_num': page_num,       # 当前页码
         }
         return render(request, 'list.html', context)
+
+
+class HotGoodsView(View):
+    """商品热销排行"""
+
+    def get(self, request, category_id):
+        """提供商品热销排行JSON数据"""
+        # 根据销量倒序
+        skus = SKU.objects.filter(category_id=category_id, is_launched=True).order_by('-sales')[:2]
+
+        # 序列化
+        hot_skus = []
+        for sku in skus:
+            hot_skus.append({
+                'id':sku.id,
+                'default_image_url':sku.default_image.url,
+                'name':sku.name,
+                'price':sku.price
+            })
+
+        return http.JsonResponse({'code':RETCODE.OK, 'errmsg':'OK', 'hot_skus':hot_skus})

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'oauth',  # 第三方认证登录
     'areas',  # 省市区联动
     'goods',  # 商品
-    'haystack', # 全文检索
+    'haystack',  # 全文检索
+    'carts',  # 购物车
 ]
 
 MIDDLEWARE = [
@@ -120,6 +121,13 @@ CACHES = {  # 配置Redis
     "history": { # 用户浏览记录
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    "carts": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/4",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

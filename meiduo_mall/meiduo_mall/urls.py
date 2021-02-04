@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^search/', include('haystack.urls')),  # Haystack
     url(r'^', include('carts.urls', namespace='carts')),  # carts
     url(r'^', include('orders.urls', namespace='orders')),  # orders
+    url(r'^', include('payment.urls', namespace='payment')),  # payment
 ]

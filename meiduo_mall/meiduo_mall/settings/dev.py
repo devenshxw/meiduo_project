@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'carts',  # 购物车
     'orders',  # 订单
     'payment',  # 支付
+    'django_crontab',  # 定时任务
 ]
 
 MIDDLEWARE = [
@@ -267,3 +268,9 @@ ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
 ALIPAY_RETURN_URL = 'http://127.0.0.1:8000/payment/status/'
 ALIPAY_NOTIFY_URL = 'http://api.test.alipay.net/atinterface/receive_notify.htm'
 
+# 定时任务
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    ('*/1 * * * *', 'contents.crons.generate_static_index_html', '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
+]
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
